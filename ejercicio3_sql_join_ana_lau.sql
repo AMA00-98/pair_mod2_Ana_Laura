@@ -34,6 +34,7 @@ SELECT s.CompanyName, o.OrderID -- Columnas que queremos sacar + Alias de las Ta
 		ON s.ShipperID = o.ShipVIA; -- FK 
 
 -- Le pregunté a la IA cómo saber cuál es la FK exacta de ambas Tablas y me sacó 'ShipVIA', como quería saber cómo puedo sacarlo sin recurrir a él, me explicó lo siguiente:
+-- ESTO se puede ver mediante el DIAGRAMA del Schema --> 'Database'
 
 DESCRIBE Orders; -- Esto es para sacar la infromación de las columnas, nos fijamos en 'Key' para saber la PK ('PRI') y posibles FK ('MUL') de la tabla
 -- FK = MUL: CustomerID ❌, EmployeeID ❌, OrderDate ❌, ShippedDate ✅ , ShipVIA ✅ y ShipPostalCode ✅ 
