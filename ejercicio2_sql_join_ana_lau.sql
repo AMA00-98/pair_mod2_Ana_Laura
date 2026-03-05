@@ -1,87 +1,25 @@
-CREATE SCHEMA joins;
+USE northwind;
 
-USE joins;
- 
--- Crear la tabla clientes
-CREATE TABLE clientes (
-    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    ciudad VARCHAR(100) NOT NULL
-);
- 
--- Crear la tabla productos
-CREATE TABLE productos (
-    id_producto INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    precio DECIMAL(10, 2) NOT NULL,
-    producto_similar INT,
-    FOREIGN KEY (producto_similar) REFERENCES productos(id_producto)
-);
- 
--- Crear la tabla pedidos 
-CREATE TABLE pedidos (
-    id_pedido INT AUTO_INCREMENT PRIMARY KEY,
-    id_cliente INT,
-    id_producto INT,
-    importe DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente),
-    FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
-);
+-- Pedidos por empresa en UK:
 
--- Insertar clientes
-INSERT INTO clientes (nombre, ciudad) 
-VALUES
-	('Juan Pérez', 'Madrid'),
-	('Ana Gómez', 'Barcelona'),
-	('Luis Martínez', 'Valencia'),
-	('Marta Sánchez', 'Sevilla'),        
-	('Carlos Ruiz', 'Zaragoza'),
-	('Sofía López', 'Málaga'),
-	('Javier Díaz', 'Murcia'),
-	('Elena Torres', 'Palma'),            
-	('Miguel García', 'Bilbao'),
-('Lucía Hernández', 'Alicante');
- 
--- Insertar productos
-INSERT INTO productos (nombre, precio, producto_similar) 
-VALUES
-	('Laptop HP', 1200.00, NULL),           
-	('Laptop Dell', 1100.00, 1),            
-	('Smartphone Samsung', 800.00, NULL),   
-	('Smartphone Xiaomi', 600.00, 3),       
-	('Tablet Apple', 900.00, NULL),         
-	('Tablet Samsung', 700.00, 5),          
-	('Auriculares Sony', 150.00, NULL),     
-	('Auriculares Bose', 200.00, 7),        
-	('Teclado Logitech', 50.00, NULL),      
-	('Teclado Microsoft', 60.00, 9);        
-	 
--- Insertar pedidos (ahora con id_producto)
-INSERT INTO pedidos (id_cliente, id_producto, importe) 
-VALUES
-	(1, 1, 1200.00),  
-	(1, 7, 150.00),   
-	(2, 3, 800.00),   
-	(3, 2, 1100.00),  
-	(3, 8, 200.00),   
-	(3, 4, 600.00),   
-	(5, 1, 1200.00),  
-	(5, 7, 150.00),   
-	(6, 3, 800.00),   
-	(6, 4, 600.00),   
-	(7, 2, 1100.00),  
-	(7, 8, 200.00),   
-	(9, 1, 1200.00),  
-	(9, 3, 800.00),   
-	(10, 4, 600.00),  
-	(10, 7, 150.00),  
-	(10, 8, 200.00),  
-	(1, 4, 600.00),   
-	(5, 3, 800.00),   
-	(7, 1, 1200.00);  
-
--- CONSULTAS --
-
-SELECT *
-	FROM pedidos;
+SELECT * -- Consulto primero los clientes de UK 📌
+    FROM Customers
+    WHERE Country = 'UK';
     
+-- Nos piden el ID del cliente y el nombre de la empresa de los clientes (TABLA 1)
+
+SELECT CustomerID, CompanyName  -- Veo la tabla con el id y nombre de la empresa 📌
+    FROM Customers;
+
+-- Tengo que unir el numero de pedidos (TABLA 2)
+
+SELECT OrderID -- Veo el id de los pedidos 📌
+    FROM Orders; 
+
+-- Resultado uniendo todo lo de arriba con JOIN
+
+SELECT c.CustomerID AS Identificador, c.CompanyName AS NombreEmpresa, o.OrderID AS NumeroPedidos -- Seleccionamos las 2 columnas (Tab.1) y la columna (Tab.2) + Alias
+    FROM Customers AS c -- De la Tabla 1
+        INNER JOIN Orders AS o -- Y lo unimos con la Tabla 2
+            ON c.CustomerID = o.CustomerID -- Donde 'CustomerID' = FK de ambas tablas, coinciden
+	WHERE c.Country = "UK"; -- En donde los clientes pertenecen al país UK
